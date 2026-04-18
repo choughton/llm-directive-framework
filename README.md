@@ -2,6 +2,8 @@
 
 **Six directives that fix the five worst AI assistant behaviors -- works across Claude, Gemini, and ChatGPT.**
 
+![LLM Directive Framework priority chain](./assets/priority_chain.png)
+
 ---
 
 Five things every AI assistant does that waste your time:
