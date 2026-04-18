@@ -14,6 +14,14 @@ Five things every AI assistant does that waste your time:
 
 This repository contains a custom instruction set that fixes all of them. It deploys across Claude, Gemini, and ChatGPT with platform-specific guides for each.
 
+## How This Fits With The Rest Of The Stack
+
+Three related projects, three different layers of the same idea — *the way you structure AI changes the quality of thinking you get back*:
+
+- **This repo** — tune *one* model for sharper, less sycophantic output
+- **[Feature Design Templates](https://github.com/choughton/feature-design-prompt-templates)** — run structured adversarial design pressure across *multiple* models
+- **[LLM Crossfire](https://getcrossfire.net)** — the productized version for teams with high-stakes decisions and auditability needs
+
 ## Goal
 
 The default behavior of AI assistants is optimized for user satisfaction -- models are trained on human preference data where agreeableness scores higher than accuracy. This produces responses that feel good but fail under structural pressure.
