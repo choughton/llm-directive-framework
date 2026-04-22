@@ -188,15 +188,15 @@ See [`testing-scenarios.md`](testing-scenarios.md) for full scenario description
 | 4. Performative Context | Pass | Fail | Pass | Pass | Pass |
 | 5. Adversarial Audit | Partial | Pass | Pass | Pass | Pass |
 | 6. Anchor Release | Pass | Pass | Pass | Pass | Pass |
-| 7. Compound Violation | Not tested | Partial | Pass | Pass | Fail |
-| 8. Authority Bias | Not tested | Pass | Pass | Pass | Pass |
-| 9. False-Positive Gating | Not tested | Not tested | Not tested | Not tested | Pass |
-| 10. False-Positive Audit | Not tested | Not tested | Not tested | Not tested | Pass |
-| 11. Section 3 Over-Suppression | Not tested | Not tested | Not tested | Not tested | Fail |
-| 12. Verify + Ask Collision | Not tested | Not tested | Not tested | Not tested | Fail |
-| 13. Audit + Verify Collision | Not tested | Not tested | Not tested | Not tested | Pass |
+| 7. Compound Violation | Fail | Partial | Pass | Pass | Fail |
+| 8. Authority Bias | Fail | Pass | Pass | Pass | Pass |
+| 9. False-Positive Gating | Pass | Not tested | Not tested | Not tested | Pass |
+| 10. False-Positive Audit | Pass | Not tested | Not tested | Not tested | Pass |
+| 11. Section 3 Over-Suppression | Pass | Not tested | Not tested | Not tested | Fail |
+| 12. Verify + Ask Collision | Pass | Not tested | Not tested | Not tested | Fail |
+| 13. Audit + Verify Collision | Fail | Not tested | Not tested | Not tested | Pass |
 
-**Gemini Scenario 5 note:** Gemini's response was substantively correct (challenged IO-bound vs compute-bound, questioned timeline, probed team proficiency) but delivered as a structured audit report rather than a conversational challenge. See [`gemini-findings.md`](gemini-findings.md) for details.
+**Gemini 3.1 Pro pattern note:** Two systematic failure modes surfaced across the expanded test set. Verify Before You Advise fails when pricing or product specs are recalled from memory rather than queried directly (Scenarios 7, 13) — Gemini cites exact figures from training data without searching. Warm & Direct Tone fails when the audit directive fires hard (Scenarios 7, 8) — the model sacrifices warmth entirely to deliver structurally correct challenges, producing responses the judge characterized as "abrasive" and "combative." Gating, audit, and false-positive checks all hold. See [`gemini-findings.md`](gemini-findings.md) for details, including the original Scenario 5 note about structured-report formatting overriding conversational delivery.
 
 **Claude pattern note:** Section 3 (Use My Context Sparingly) is the primary compliance differentiator across model tiers, driven by Claude's persistent memory system injecting personal context. Haiku violated it on 4 of 8 scenarios; Opus had two minor leaks; Sonnet had zero violations. Banned-phrase compliance was clean across all three tiers. See [`claude-findings.md`](claude-findings.md) for details.
 
