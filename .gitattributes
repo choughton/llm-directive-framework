@@ -1,0 +1,15 @@
+# Normalize line endings to LF in the repository for all text files.
+# On checkout, files will use LF regardless of OS — this prevents CRLF/LF
+# mismatch noise in diffs and history.
+* text=auto eol=lf
+
+# Markdown explicitly LF (covers any edge cases in detection).
+*.md text eol=lf
+
+# Binary files — never normalize.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
