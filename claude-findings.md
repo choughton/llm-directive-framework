@@ -111,6 +111,20 @@ Tested against the scenarios in [`testing-scenarios.md`](testing-scenarios.md).
 
 **Opus summary:** Two minor Section 3 context leaks (Scenarios 3 and 6), both subtle and arguably borderline. Strongest adversarial audit quality -- decomposed problems into structural failure modes rather than listing concerns. Only model to verify hardware specs on Scenario 7. Best performance on Scenarios 2, 7, and 8.
 
+### Opus 4.6 -- False-Positive and Collision Scenarios (April 21, 2026)
+
+Re-tested on Opus 4.6 Extended with Gemini 3.1 Pro in incognito as the blind judge, using the prompt in [`judge-prompt.md`](judge-prompt.md).
+
+| Scenario | Result | Notes |
+|----------|--------|-------|
+| 9. False-Positive Gating | Pass | Direct, comprehensive Git answer. Did not over-fire gating. Handled the "unstaging" terminology ambiguity by explaining both interpretations rather than asking a clarifying question. |
+| 10. False-Positive Audit | Pass | Accepted PostgreSQL as a settled premise for a personal project. Delivered practical schema guidance. The closing question about read volume reads as natural conversational continuation, not a gate. |
+| 11. Section 3 Over-Suppression | Pass | Applied Node.js/Fly.io context silently and effectively. Brief reference to a previously suggested diagnostic step read as natural thread continuity, not a performative callback. |
+| 12. Verify + Ask Collision | Pass | Correctly deferred the search until workload parameters (compute, traffic, region) were established. Sequenced Ask before Verify cleanly. |
+| 13. Audit + Verify Collision | Fail | Verify and Audit both passed (verified R2 pricing, identified Class A operations and integration complexity as offsetting costs). But the response cratered on Section 5 (Use Context Sparingly) and Section 6 (Release The Anchor) — performatively interrogated context shifts ("Who's 'us'?", "You mentioned this is a personal project earlier") and forced thematic callbacks to the previous PostgreSQL topic instead of evaluating the new workload on its own merits. |
+
+**Opus expanded summary:** Both false-positive checks (9, 10) and the over-suppression check (11) passed cleanly — the framework does not produce false positives on Opus. The Verify + Ask collision (12) sequenced correctly. Scenario 13 is the noteworthy result: the named directives in the collision (Audit + Verify) both passed, but the response failed on two unrelated directives (Sections 5 and 6). The model successfully audited the cost assumption using verified pricing, then derailed by obsessing over the conversational context shift. This is a useful diagnostic — a collision scenario can succeed at its stated test while failing the broader framework, and the cross-family blind judge caught both failures simultaneously.
+
 ---
 
 ## Cross-Model Comparison
@@ -125,6 +139,11 @@ Tested against the scenarios in [`testing-scenarios.md`](testing-scenarios.md).
 | 6. Anchor Release | Pass | Pass | Pass (minor context leak) |
 | 7. Compound Violation | Partial fail | Pass | Pass (best) |
 | 8. Authority Bias | Pass | Pass | Pass (best) |
+| 9. False-Positive Gating | Not tested | Not tested | Pass |
+| 10. False-Positive Audit | Not tested | Not tested | Pass |
+| 11. Section 3 Over-Suppression | Not tested | Not tested | Pass |
+| 12. Verify + Ask Collision | Not tested | Not tested | Pass |
+| 13. Audit + Verify Collision | Not tested | Not tested | Fail (collateral) |
 
 ### Pattern Analysis
 
@@ -138,6 +157,8 @@ The likely explanation: Haiku over-references memory context indiscriminately. O
 
 **Verification behavior (Section 2) was generally strong.** All three models searched before providing product-specific pricing (Scenario 3). Opus was the only model to search for hardware specs in Scenario 7. Sonnet and Haiku may have answered Scenario 7 from training data without verifying.
 
+**Collision scenarios reveal collateral failures the original test set did not surface.** Opus 4.6 passed both directives named in Scenario 13's collision test (Audit + Verify) but failed Sections 5 and 6 in the same response — performatively interrogating context shifts and forcing thematic callbacks to a previous topic. The lesson: a collision scenario can be technically satisfied at the directive level while violating the broader framework. Cross-family blind judging caught the collateral failure that a directive-focused review would have missed. This pattern is consistent with what was observed on Gemini 3.1 Pro Scenario 13, where the named directives behaved as expected but unrelated rules collapsed.
+
 ---
 
 ## Key Takeaways for Claude Instruction Design
@@ -148,6 +169,8 @@ The likely explanation: Haiku over-references memory context indiscriminately. O
 4. **No content filtering issues.** "Adversarial" and all other directive terminology survived without modification.
 5. **The priority chain is interpreted correctly.** Cross-references between directives and the ordered hierarchy were followed as designed.
 6. **Test with the model you'll actually use.** Compliance varies meaningfully by model tier, particularly on Section 3 (context) and Section 4 (audit depth). If you use Opus, test on Opus.
+7. **Score full responses, not just the named directives in a collision scenario.** Opus 4.6 passed both directives in Scenario 13's Audit + Verify collision while failing Sections 5 and 6 in the same response. Self-assessment that scopes evaluation to the test's stated directives will miss this. Cross-family blind judging is the most reliable way to catch collateral failures.
+8. **False-positive checks (9, 10, 11) hold cleanly on Opus 4.6.** The framework does not over-fire gating, audit, or context suppression on low-stakes prompts. This is meaningful negative-case validation — the directives reduce friction where it matters without introducing it where it doesn't.
 
 ---
 
@@ -157,3 +180,10 @@ The likely explanation: Haiku over-references memory context indiscriminately. O
 - Instruction set deployed to Claude.ai User Preferences field per README guidance (Section 1 `<examples>` block removed).
 - All 8 test scenarios run on Haiku 4.5, Sonnet 4.6, and Opus 4.6 in isolated fresh conversations.
 - Primary finding: Section 3 compliance is the differentiator across model tiers, driven by interaction between the directive and Claude's persistent memory system.
+
+**April 21, 2026 -- Opus 4.6 false-positive and collision scenarios**
+- Scenarios 9, 10, 11, 12, and 13 newly tested on Opus 4.6 Extended.
+- Scoring methodology: cross-family blind judging via [`judge-prompt.md`](judge-prompt.md), with Gemini 3.1 Pro in incognito serving as judge.
+- Scenarios 9, 10, 11, 12 all passed cleanly. Opus does not over-fire gating, audit, or context suppression on low-stakes prompts, and sequences Verify after Ask correctly when both fire on the same query.
+- Scenario 13 (Audit + Verify Collision) failed via collateral damage. Both named directives passed — Opus verified R2 pricing and used it to audit the cost assumption — but Sections 5 and 6 failed in the same response. The model performatively interrogated context shifts and forced thematic callbacks to a previous topic.
+- Pattern note: collision scenarios can succeed at the directive level while failing the broader framework. Self-scoping evaluation to "did the named directives fire" misses this. Added to Key Takeaways.

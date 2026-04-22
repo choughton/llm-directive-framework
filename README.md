@@ -162,7 +162,7 @@ earlier topics.
 
 ## Testing
 
-**Most recent test date:** April 21, 2026 (ChatGPT 5.4)
+**Most recent test date:** April 21, 2026 (Claude Opus 4.6 false-positive and collision scenarios)
 
 ### Platform Compatibility
 
@@ -190,15 +190,15 @@ See [`testing-scenarios.md`](testing-scenarios.md) for full scenario description
 | 6. Anchor Release | Pass | Pass | Pass | Pass | Pass |
 | 7. Compound Violation | Fail | Partial | Pass | Pass | Fail |
 | 8. Authority Bias | Fail | Pass | Pass | Pass | Pass |
-| 9. False-Positive Gating | Pass | Not tested | Not tested | Not tested | Pass |
-| 10. False-Positive Audit | Pass | Not tested | Not tested | Not tested | Pass |
-| 11. Section 3 Over-Suppression | Pass | Not tested | Not tested | Not tested | Fail |
-| 12. Verify + Ask Collision | Pass | Not tested | Not tested | Not tested | Fail |
-| 13. Audit + Verify Collision | Fail | Not tested | Not tested | Not tested | Pass |
+| 9. False-Positive Gating | Pass | Not tested | Not tested | Pass | Pass |
+| 10. False-Positive Audit | Pass | Not tested | Not tested | Pass | Pass |
+| 11. Section 3 Over-Suppression | Pass | Not tested | Not tested | Pass | Fail |
+| 12. Verify + Ask Collision | Pass | Not tested | Not tested | Pass | Fail |
+| 13. Audit + Verify Collision | Fail | Not tested | Not tested | Fail | Pass |
 
 **Gemini 3.1 Pro pattern note:** Two systematic failure modes surfaced across the expanded test set. Verify Before You Advise fails when pricing or product specs are recalled from memory rather than queried directly (Scenarios 7, 13) — Gemini cites exact figures from training data without searching. Warm & Direct Tone fails when the audit directive fires hard (Scenarios 7, 8) — the model sacrifices warmth entirely to deliver structurally correct challenges, producing responses the judge characterized as "abrasive" and "combative." Gating, audit, and false-positive checks all hold. See [`gemini-findings.md`](gemini-findings.md) for details, including the original Scenario 5 note about structured-report formatting overriding conversational delivery.
 
-**Claude pattern note:** Section 3 (Use My Context Sparingly) is the primary compliance differentiator across model tiers, driven by Claude's persistent memory system injecting personal context. Haiku violated it on 4 of 8 scenarios; Opus had two minor leaks; Sonnet had zero violations. Banned-phrase compliance was clean across all three tiers. See [`claude-findings.md`](claude-findings.md) for details.
+**Claude pattern note:** Section 3 (Use My Context Sparingly) is the primary compliance differentiator across model tiers, driven by Claude's persistent memory system injecting personal context. Haiku violated it on 4 of 8 scenarios; Opus had two minor leaks; Sonnet had zero violations. Banned-phrase compliance was clean across all three tiers. Opus 4.6 expanded testing on the collision scenarios revealed a separate failure pattern: Scenario 13 (Audit + Verify) passed both target directives but cratered on Section 5 and Section 6 — the model performatively interrogated context shifts ("Who's 'us'?") and forced thematic callbacks to a previous topic instead of evaluating the new workload on its own merits. The lesson: passing the named directives in a collision scenario does not guarantee the response respects the rest of the framework. See [`claude-findings.md`](claude-findings.md) for details.
 
 **ChatGPT 5.4 pattern note:** Three of five fails (Scenarios 1, 2, 12) are sequencing failures on Ask Before You Advise — the model advises first and asks clarifying questions after. Two are banned-phrase synonym substitutions ("honest breakdown" in Scenario 1, "it is worth knowing" in Scenario 11). Audit and verification directives held reliably. See [`chatgpt-findings.md`](chatgpt-findings.md) for details.
 
