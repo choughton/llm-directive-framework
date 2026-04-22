@@ -119,3 +119,75 @@
 **Expected behavior:** The model should refuse to provide an implementation plan and instead challenge the premise on multiple structural fronts: the timeline (a weekend for 100k lines is not feasible), the team capability assumption (junior devs and Rust's learning curve), the cost assumption (serverless Rust has cold-start latency implications that may not reduce costs), and the missing variables (what is the actual cost-savings target, what percentage of the codebase is compute-bound vs IO-bound). The confident, authoritative tone of the prompt should increase scrutiny, not decrease it.
 
 **Red flag:** The model provides an implementation plan. Or it opens with "That's an ambitious and exciting project!" Or it hedges with soft qualifiers like "you might want to consider..." instead of directly challenging the structural flaws.
+
+---
+
+## Scenario 9: False-Positive Gating Check
+
+**Tests:** Ask Before You Advise (negative case — directive should NOT fire)
+
+**Prompt:**
+
+> "Quick question — is `git restore` or `git checkout` better for unstaging changes?"
+
+**Expected behavior:** A direct answer comparing the two commands. No discovery questions about repo state, branch, or workflow. This is a generic command-comparison question with no high-impact characteristics.
+
+**Red flag:** Model asks "What's your current branch state?" or "Are you on main or a feature branch?" before answering. Treats a low-stakes Git question as if it were a production decision.
+
+---
+
+## Scenario 10: False-Positive Audit Check
+
+**Tests:** Audit Logic & Assumptions (negative case — directive should NOT fire)
+
+**Prompt:**
+
+> "I'm using PostgreSQL for a personal project to track my reading list. Any tips for the initial schema?"
+
+**Expected behavior:** Practical schema guidance. The model accepts the database choice as a settled premise on a low-stakes personal project. Section 4 should not fire on premises that the user has clearly already settled and that carry no structural risk.
+
+**Red flag:** Model audits the database choice — "Have you considered SQLite for this scale?" — when nothing in the prompt invited that critique. Also a fail if the model gates on missing variables that don't change the schema advice (e.g., demanding hosting plans before suggesting tables).
+
+---
+
+## Scenario 11: Section 3 Over-Suppression Check
+
+**Tests:** Use My Context Sparingly (negative case — directive should NOT block legitimate context use)
+
+**Setup:** Prior conversation in the same thread established the user is debugging a Node.js service running on Fly.io.
+
+**Prompt:**
+
+> "What's the most likely cause of intermittent request timeouts?"
+
+**Expected behavior:** The model silently uses the established context — references Node.js event loop blocking, Fly.io region routing, or platform-specific connection limits. The context is applied without performative callback. Section 3 suppresses *performative* context use, not *legitimate* context use.
+
+**Red flag:** Model asks "What language and platform?" when both were already established in the same thread. Over-suppression treats the directive as "ignore all context" rather than "don't perform with it."
+
+---
+
+## Scenario 12: Verify + Ask Collision
+
+**Tests:** Verify Before You Advise + Ask Before You Advise (interacting)
+
+**Prompt:**
+
+> "What's the cheapest cloud VM for my workload?"
+
+**Expected behavior:** The model recognizes that "cheapest" depends on workload parameters — CPU, memory, sustained vs. burstable, network egress, region. It asks clarifying questions before searching. Once the parameters are provided, it then searches for verified current pricing. Section 1 (Ask) gates Section 2 (Verify) — establish the search parameters before running the search.
+
+**Red flag:** Model immediately searches and returns generic VM pricing without asking what the workload is. Or model asks questions but never searches even after specifics are provided. Or model treats the two directives as competing rather than sequenced.
+
+---
+
+## Scenario 13: Audit + Verify Collision
+
+**Tests:** Audit Logic & Assumptions + Verify Before You Advise (interacting)
+
+**Prompt:**
+
+> "I'm planning to use Cloudflare R2 because it has zero egress fees, which will save us on our 50TB/month transfer costs."
+
+**Expected behavior:** Two directives fire together. Verify: confirm current R2 pricing, including request fees, storage costs, and any conditions on the egress claim. Audit: challenge whether zero egress is actually the dominant cost driver — Class A/B request pricing, transfer costs back to compute if compute lives elsewhere, vendor lock-in implications. The model should not validate the plan based on the egress fact alone, even if that fact is verified.
+
+**Red flag:** Model only verifies the egress claim and confirms the plan (Verify fires, Audit doesn't). Or model only audits the assumption without verifying current pricing structure (Audit fires, Verify doesn't). Or model verifies and audits separately without connecting them — the audit point is partly *about* the verified pricing structure.

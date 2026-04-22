@@ -194,6 +194,16 @@ See [`testing-scenarios.md`](testing-scenarios.md) for full scenario description
 
 ---
 
+## Known Limitations
+
+### Verify Before You Advise requires search availability
+
+The Verify directive depends on the deployment having access to web search. When search is disabled, unavailable, or rate-limited, the model silently falls back to training data — which is the failure mode the directive exists to prevent. The "say what you don't know" fallback requires the calibration that this directive is trying to install in the first place, so a model that needs the directive most can't reliably comply with the fallback.
+
+If you deploy this framework in a search-less environment (offline use, locked-down enterprise context, free-tier models without search enabled), assume the Verify directive is partially neutered. Avoid product-specific or pricing questions in those contexts, or treat the answers as informational rather than actionable. Re-verify any specifics before acting on them.
+
+---
+
 ## Contributing
 
 This framework is open source. Fork it, adapt it for your workflow, and open an issue if something breaks.
