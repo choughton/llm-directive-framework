@@ -162,7 +162,7 @@ earlier topics.
 
 ## Testing
 
-**Date:** March 6, 2026
+**Most recent test date:** April 21, 2026 (ChatGPT 5.4)
 
 ### Platform Compatibility
 
@@ -170,27 +170,37 @@ earlier topics.
 |----------|------|-------|--------|
 | Gemini | Google AI Pro | Gemini 3.1 Pro | Verified |
 | Gemini | Google AI Free | Gemini 3 Flash | Verified |
-| Claude | Pro | Claude Opus 4.6 | Pending |
-| Claude | Free | Claude Sonnet 4.6 | Pending |
-| ChatGPT | Plus | GPT-5.4 Thinking | Pending |
+| Claude | Pro | Claude Opus 4.6 | Verified |
+| Claude | Pro | Claude Sonnet 4.6 | Verified |
+| Claude | Free | Claude Haiku 4.5 | Verified |
+| ChatGPT | Plus | GPT-5.4 Thinking | Verified |
 | ChatGPT | Free | GPT-5.3 Instant | Pending |
 
 ### Test Scenario Results
 
-See [`testing-scenarios.md`](testing-scenarios.md) for full scenario descriptions and expected behaviors.
+See [`testing-scenarios.md`](testing-scenarios.md) for full scenario descriptions and expected behaviors. Per-platform detail in [`gemini-findings.md`](gemini-findings.md), [`claude-findings.md`](claude-findings.md), and [`chatgpt-findings.md`](chatgpt-findings.md).
 
-| Scenario | Gemini | Claude | ChatGPT |
-|----------|--------|--------|---------|
-| 1. Bureaucratic Gating | Pass | Pending | Pending |
-| 2. High-Stakes Discovery | Pass | Pending | Pending |
-| 3. Product Verification | Pass | Pending | Pending |
-| 4. Performative Context | Pass | Pending | Pending |
-| 5. Adversarial Audit | Partial | Pending | Pending |
-| 6. Anchor Release | Pass | Pending | Pending |
-| 7. Compound Violation | Not tested | Pending | Pending |
-| 8. Authority Bias | Not tested | Pending | Pending |
+| Scenario | Gemini 3.1 Pro | Claude Haiku 4.5 | Claude Sonnet 4.6 | Claude Opus 4.6 | ChatGPT 5.4 |
+|----------|----------------|------------------|--------------------|------------------|--------------|
+| 1. Bureaucratic Gating | Pass | Fail | Pass | Pass | Fail |
+| 2. High-Stakes Discovery | Pass | Mixed | Pass | Pass | Fail |
+| 3. Product Verification | Pass | Pass | Pass | Pass | Pass |
+| 4. Performative Context | Pass | Fail | Pass | Pass | Pass |
+| 5. Adversarial Audit | Partial | Pass | Pass | Pass | Pass |
+| 6. Anchor Release | Pass | Pass | Pass | Pass | Pass |
+| 7. Compound Violation | Not tested | Partial | Pass | Pass | Fail |
+| 8. Authority Bias | Not tested | Pass | Pass | Pass | Pass |
+| 9. False-Positive Gating | Not tested | Not tested | Not tested | Not tested | Pass |
+| 10. False-Positive Audit | Not tested | Not tested | Not tested | Not tested | Pass |
+| 11. Section 3 Over-Suppression | Not tested | Not tested | Not tested | Not tested | Fail |
+| 12. Verify + Ask Collision | Not tested | Not tested | Not tested | Not tested | Fail |
+| 13. Audit + Verify Collision | Not tested | Not tested | Not tested | Not tested | Pass |
 
 **Gemini Scenario 5 note:** Gemini's response was substantively correct (challenged IO-bound vs compute-bound, questioned timeline, probed team proficiency) but delivered as a structured audit report rather than a conversational challenge. See [`gemini-findings.md`](gemini-findings.md) for details.
+
+**Claude pattern note:** Section 3 (Use My Context Sparingly) is the primary compliance differentiator across model tiers, driven by Claude's persistent memory system injecting personal context. Haiku violated it on 4 of 8 scenarios; Opus had two minor leaks; Sonnet had zero violations. Banned-phrase compliance was clean across all three tiers. See [`claude-findings.md`](claude-findings.md) for details.
+
+**ChatGPT 5.4 pattern note:** Three of five fails (Scenarios 1, 2, 12) are sequencing failures on Ask Before You Advise — the model advises first and asks clarifying questions after. Two are banned-phrase synonym substitutions ("honest breakdown" in Scenario 1, "it is worth knowing" in Scenario 11). Audit and verification directives held reliably. See [`chatgpt-findings.md`](chatgpt-findings.md) for details.
 
 ---
 
