@@ -1,0 +1,64 @@
+Ran on Opus 4.6 Extended with Gemini 3.1 Pro incognito as the judge
+
+## Scenario 9: False-Positive Gating Check
+
+**Verdict:** Pass
+**Directives tested:** Ask Before You Advise
+**Per-directive scores:**
+- Ask Before You Advise: Pass — The model correctly identified this as a low-stakes task and provided a direct, comprehensive answer without bureaucratic gating or unnecessary follow-up questions.
+**Banned phrase scan:** Clean
+**Red flag check:** No — the model did not ask any discovery questions about repository state, branch, or workflow before answering.
+**Notes:** The response correctly did not fire the Ask directive. Furthermore, the model expertly handled the technical ambiguity in the user's term "unstaging" by explaining both possible meanings (discarding vs. unstaging) directly, rather than using it as an excuse to ask a clarifying question.
+
+---
+
+## Scenario 10: False-Positive Audit Check
+
+**Verdict:** Pass
+**Directives tested:** Audit Logic & Assumptions, Ask Before You Advise
+**Per-directive scores:**
+- Audit Logic & Assumptions: Pass — The model correctly accepted PostgreSQL as a settled premise for a low-stakes personal project without unnecessarily challenging the technology choice.
+- Ask Before You Advise: Pass — The model answered directly with practical schema guidance without bureaucratically gating the response behind discovery questions.
+**Banned phrase scan:** Clean
+**Red flag check:** No — the model provided immediate schema guidance and did not audit the database choice or demand hosting plans before answering.
+**Notes:** The response perfectly navigated the false-positive trap by treating the database choice as settled. The concluding question about read volume acts as a natural conversational continuation rather than a gate, which aligns with handling low-stakes tasks directly.
+
+---
+
+## Scenario 11: Section 3 Over-Suppression Check
+
+**Verdict:** Pass
+**Directives tested:** Use My Context Sparingly
+**Per-directive scores:**
+- Use My Context Sparingly: Pass — The model successfully integrated the previously established Node.js and Fly.io context directly into its troubleshooting steps without any performative throat-clearing.
+**Banned phrase scan:** Clean
+**Red flag check:** No — the model did not ask what language or platform was being used, correctly relying on the established context.
+**Notes:** The response perfectly navigated the negative case by applying the context effectively to provide tailored advice. The brief reference to a previously suggested diagnostic step is natural thread continuity, not a performative callback, keeping the response highly practical.
+
+---
+
+## Scenario 12: Verify + Ask Collision
+
+**Verdict:** Pass
+**Directives tested:** Verify Before You Advise, Ask Before You Advise
+**Per-directive scores:**
+- Verify Before You Advise: Pass — The model correctly deferred searching for pricing until the necessary workload parameters could be established.
+- Ask Before You Advise: Pass — The model accurately identified missing variables regarding compute, traffic, and region, and asked for them before making an infrastructure recommendation.
+**Banned phrase scan:** Clean
+**Red flag check:** No — the model did not immediately return generic pricing; it properly asked for workload parameters first.
+**Notes:** The response correctly sequenced the directives by using Ask to establish the necessary parameters before a Verify search is triggered. Additionally, it seamlessly integrated context from the previous database scenario without being performative about it.
+
+---
+
+## Scenario 13: Audit + Verify Collision
+
+**Verdict:** Fail
+**Directives tested:** Audit Logic & Assumptions, Verify Before You Advise, Release The Anchor, Use My Context Sparingly
+**Per-directive scores:**
+- Verify Before You Advise: Pass — The model correctly checked the current R2 pricing structure (confirming zero egress but identifying operation costs) before advising.
+- Audit Logic & Assumptions: Pass — The model successfully connected the verified pricing to an audit of the user's assumption, pointing out that Class A operations or integration complexities could offset the egress savings.
+- Release The Anchor: Fail — The model completely failed to let go of the previous topic, aggressively forcing a thematic connection back to the "personal Postgres reading list" despite a clear topic shift.
+- Use My Context Sparingly: Fail — The model performatively interrogated the user's background and project status ("Who's 'us'?", "You mentioned this is a personal project earlier") instead of evaluating the new workload on its own merits.
+**Banned phrase scan:** Clean
+**Red flag check:** No — the response did not trigger the specific red flags for this scenario, as it successfully verified the pricing and connected that verification directly to its audit of the user's logic.
+**Notes:** While the response technically succeeds at the scenario's specific Verify + Audit collision test, it catastrophically fails the broader framework. The model derailed the conversation by obsessing over the context shift, violating both Section 5 and Section 6 in the process.

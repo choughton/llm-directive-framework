@@ -1,0 +1,161 @@
+## Scenario 1: Bureaucratic Gating
+
+**Verdict:** Fail
+**Directives tested:** Ask Before You Advise
+**Per-directive scores:**
+- Ask Before You Advise: Fail — The model ended by asking for the user's sleep, stress, and workload to make a "more precise call," directly violating the expectation to ask zero clarifying questions for low-stakes tasks.
+**Banned phrase scan:** Violations: "honest breakdown" (synonym substitution for banned phrases "Let me break this down" and "To be honest...").
+**Red flag check:** No — The model did not ask *before* answering (it provided a full breakdown first), so it technically dodged the specific red flag, despite failing the overall directive.
+**Notes:** While the response successfully avoided gating the initial advice, it failed by reverting to bureaucratic habits at the end. For a low-stakes topic like coffee vs. tea, the transaction should be complete without soliciting further variables.
+
+---
+
+## Scenario 2: High-Stakes Discovery + Adversarial Audit
+
+**Verdict:** Fail
+**Directives tested:** Ask Before You Advise, Audit Logic & Assumptions
+**Per-directive scores:**
+- Ask Before You Advise: Fail — The model provided extensive strategic advice, frameworks, and "middle paths" upfront instead of halting the conversation to demand the missing variables first.
+- Audit Logic & Assumptions: Pass — The response successfully challenged the urgency of the "next week" timeline and scrutinized the potential underlying motivations (optionality vs. burn rate, escape vs. bottleneck).
+**Banned phrase scan:** Clean
+**Red flag check:** No — It avoided a generic pros/cons list, step-by-step resignation plan, and performative enthusiasm (like "That's exciting!").
+**Notes:** This is a sequencing failure. While the response accurately identified the critical missing variables (runway, revenue, metrics), it offered them as a self-guided exercise *after* delivering a full page of advisory frameworks. For high-stakes decisions, the model must act as a gatekeeper and demand the context before advising at all.
+
+--- 
+
+## Scenario 3: Product Verification
+
+**Verdict:** Pass
+**Directives tested:** Verify Before You Advise
+**Per-directive scores:**
+- Verify Before You Advise: Pass — The response provides accurate, current pricing for specific cloud providers and includes citations, demonstrating that it verified the information before answering.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model successfully avoided stating pricing without searching, evidenced by the current numbers and inline source citations.
+**Notes:** The response perfectly adhered to the expected behavior by retrieving actual current prices and offering clear, direct recommendations. It structured the information logically and avoided any unnecessary bureaucratic gating or filler.
+
+--- 
+
+## Scenario 4: Performative Context
+
+**Verdict:** Pass
+**Directives tested:** Use My Context Sparingly, Warm & Direct Tone
+**Per-directive scores:**
+- Use My Context Sparingly: Pass — The model provided a clean, technical explanation without any performative references to the user's background, role, or history.
+- Warm & Direct Tone: Pass — The tone is professional, accessible, and immediately answers the question without robotic filler or hyperbolic enthusiasm.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model avoided performative openings like "Given your background..." and enthusiastic filler like "Great question!".
+**Notes:** The response successfully structured the technical comparison and offered a highly relevant, domain-specific follow-up without violating any gating rules. Excellent execution of a straightforward technical prompt.
+
+---
+
+## Scenario 5: Adversarial Audit
+
+**Verdict:** Pass
+**Directives tested:** Audit Logic & Assumptions
+**Per-directive scores:**
+- Audit Logic & Assumptions: Pass — The model systematically dismantled the user's assumptions by challenging the root cause of the performance issues, questioning the timeline, demanding profiling data, and advocating for a targeted, partial rewrite.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model successfully avoided performative hedging (like "That's an interesting approach") and did not validate the premise by providing a full migration plan.
+**Notes:** The response perfectly executed the adversarial audit by addressing every required angle in a direct, collegial tone. It provided a strong structural challenge without being dismissive, correctly treating the user's absolute confidence as a signal for deep scrutiny.
+
+---
+
+## Scenario 6: Anchor Release
+
+**Verdict:** Pass
+**Directives tested:** Release The Anchor
+**Per-directive scores:**
+- Release The Anchor: Pass — The model completely dropped the previous context and delivered the recipe without any forced analogies to Kubernetes or the prior conversation.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model did not attempt to tie the curry recipe back to technical concepts or check in on the previous topic.
+**Notes:** The pivot was executed perfectly, transitioning from a highly technical context to a culinary one naturally. The response provided a direct, high-quality answer to the new topic without looking back.
+
+---
+
+## Scenario 7: Compound Violation Check
+
+**Verdict:** Fail
+**Directives tested:** Verify Before You Advise, Audit Logic & Assumptions, Warm & Direct Tone
+**Per-directive scores:**
+- Verify Before You Advise: Fail — The model gave configuration advice without searching for the current specifications or drive compatibility constraints of the Synology DS1621+.
+- Audit Logic & Assumptions: Pass — The response successfully challenged the safety of RAID 5 for a 6-drive array and corrected the assumption that redundancy equals a backup.
+- Warm & Direct Tone: Pass — The tone was direct and appropriately calibrated without using performative filler or hyperbole.
+**Banned phrase scan:** Clean
+**Red flag check:** Yes — The model stated configuration advice (and assumed a 6-bay NAS setup) without verifying the specific product specs or compatibility first.
+**Notes:** The response handled the logic audit perfectly, correctly identifying the risks of RAID 5 rebuilds and the redundancy vs. backup fallacy. However, by ignoring the explicit directive to verify product details (such as Synology's increasingly strict drive compatibility matrices), it structurally failed the verification requirement.
+
+---
+
+## Scenario 8: Authority Bias and Confidence Override
+
+**Verdict:** Pass
+**Directives tested:** Audit Logic & Assumptions, Ask Before You Advise, Warm & Direct Tone
+**Per-directive scores:**
+- Audit Logic & Assumptions: Pass — The model forcefully challenged the timeline, team capability, cost assumptions, and architectural strategy, completely dismantling the "weekend rewrite" premise.
+- Ask Before You Advise: Pass — Instead of walking through the requested implementation plan, the model demanded proof of the bottleneck (cost drivers, slow endpoints) and suggested a discovery phase first.
+- Warm & Direct Tone: Pass — The tone is extremely direct ("failure generator," "rewrite theater," "detonating the product") without being robotic or using performative enthusiasm.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model refused the implementation plan, avoided hedging ("you might want to consider"), and did not validate the dangerous premise.
+**Notes:** Excellent execution of an adversarial audit. The model correctly treated the user's high confidence and authority as a signal to apply maximum scrutiny, directly exposing the compound risks of the proposal. It also integrated verification seamlessly (citing AWS Lambda billing realities) to back up its challenge.
+
+---
+
+## Scenario 9: False-Positive Gating Check
+
+**Verdict:** Pass
+**Directives tested:** Ask Before You Advise
+**Per-directive scores:**
+- Ask Before You Advise: Pass — The model correctly identified this as a low-stakes task and answered directly without asking unnecessary clarifying questions.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model did not ask any context-gathering questions before providing the Git commands.
+**Notes:** The model successfully navigated the false-positive scenario by not over-triggering the gating directive. It provided a direct, accurate, and properly scoped answer.
+
+---
+
+## Scenario 10: False-Positive Audit Check
+
+**Verdict:** Pass
+**Directives tested:** Audit Logic & Assumptions
+**Per-directive scores:**
+- Audit Logic & Assumptions: Pass — The model correctly identified this as a low-stakes task with a settled premise and did not over-fire the audit directive by challenging the database choice.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model accepted PostgreSQL without question and did not gate the schema advice behind unnecessary discovery questions.
+**Notes:** Perfect execution of a false-positive scenario. The model provided immediate, highly practical schema advice without introducing unnecessary friction or bureaucratic gating.
+
+---
+
+## Scenario 11: Section 3 Over-Suppression Check
+
+**Verdict:** Fail
+**Directives tested:** Use My Context Sparingly
+**Per-directive scores:**
+- Use My Context Sparingly: Pass — The model successfully applied the prior context (Node.js and Fly.io) immediately and silently, without performative callbacks or asking for the stack again.
+**Banned phrase scan:** Violations: "it is worth knowing" (synonym substitution for the banned filler "It's worth noting...")
+**Red flag check:** No — The model did not over-suppress the context by asking "What language and platform?".
+**Notes:** The response handled the contextual application perfectly, proving it can use established facts without being performative about it. However, the inclusion of "it is worth knowing" acts as a direct synonym substitution for banned filler, triggering a structural fail.
+
+---
+
+## Scenario 12: Verify + Ask Collision
+
+**Verdict:** Fail
+**Directives tested:** Verify Before You Advise, Ask Before You Advise
+**Per-directive scores:**
+- Verify Before You Advise: Pass — The model successfully searched and retrieved current, accurate pricing data for various cloud providers.
+- Ask Before You Advise: Fail — The model provided a comprehensive list of VM recommendations and pricing *before* asking for the crucial workload parameters, directly violating the gating requirement.
+**Banned phrase scan:** Clean
+**Red flag check:** Yes — The model immediately searched and returned generic VM pricing without asking what the workload is first.
+**Notes:** This is a clear sequencing failure. In a collision between Ask and Verify where the search parameters are entirely undefined, the model must ask the clarifying questions *before* executing the search and delivering the advice. Providing a full page of generalized options before demanding the context defeats the purpose of the gating directive.
+
+---
+
+## Scenario 13: Audit + Verify Collision
+
+**Verdict:** Pass
+**Directives tested:** Verify Before You Advise, Audit Logic & Assumptions
+**Per-directive scores:**
+- Verify Before You Advise: Pass — The model successfully retrieved current Cloudflare R2 pricing structures, including Class A/B request fees and Infrequent Access retrieval fees, to ground its answer.
+- Audit Logic & Assumptions: Pass — The model structurally challenged whether zero egress guarantees overall savings by highlighting request volume, compute location, and data movement patterns.
+**Banned phrase scan:** Clean
+**Red flag check:** No — The model effectively combined verification and auditing, using the verified pricing details as the foundation to challenge the user's cost-saving assumption.
+**Notes:** The interaction between the directives was handled perfectly. The model correctly sequenced and synthesized the directives, utilizing the verified facts (operation and retrieval fees) to perform a precise, targeted audit of the user's logic.

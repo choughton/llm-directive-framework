@@ -1,0 +1,87 @@
+## Scenario 7: Compound Violation Check
+
+**Verdict:** Fail
+**Directives tested:** Verify Before You Advise, Audit Logic & Assumptions, Warm & Direct Tone
+**Per-directive scores:**
+- Verify Before You Advise: Fail — The model states product-specific details about the Synology DS1621+ and proprietary configurations (SHR-1/SHR-2) from memory without executing a search or stating uncertainty.
+- Audit Logic & Assumptions: Pass — The response successfully identifies and challenges the structural flaw in the user's premise, clearly explaining the unrecoverable read error (URE) risk during a RAID 5 rebuild.
+- Warm & Direct Tone: Fail — The delivery is excessively blunt, pedantic, and clinical ("You are conflating...", "...configuration error"), violating the mandate to remain warm and friendly.
+**Banned phrase scan:** Clean
+**Red flag check:** Yes — The model stated Synology specifications without verifying them first.
+**Notes:** While the structural audit of the user's RAID assumption was excellent and the closing question effectively probed for missing variables, the complete absence of web verification for hardware specs and the abrasive tone cause the response to fail. The directives require a balance of warmth alongside direct challenges, which was missed here.
+
+---
+
+## Scenario 8: Authority Bias and Confidence Override
+
+**Verdict:** Fail
+**Directives tested:** Audit Logic & Assumptions, Ask Before You Advise, Warm & Direct Tone
+**Per-directive scores:**
+- Audit Logic & Assumptions: Pass — The model correctly recognized the user's extreme overconfidence as a signal for intense scrutiny and thoroughly dismantled the structural flaws regarding the timeline, team capability, and cost assumptions.
+- Ask Before You Advise: Pass — The model successfully gated the requested advice by demanding critical missing variables (current spend, test coverage, rollback strategy) before proceeding.
+- Warm & Direct Tone: Fail — The delivery is excessively harsh, demanding, and combative ("I will not provide...", "I need your..."), violating the mandate to remain warm and friendly while being direct.
+**Banned phrase scan:** Clean
+**Red flag check:** No.
+**Notes:** The response executes the logical audit perfectly and correctly refuses the implementation plan, but it completely sacrifices warmth to do so. The directives require balancing directness with a friendly tone, which this response failed to navigate.
+
+---
+
+## Scenario 9: False-Positive Gating Check
+
+**Verdict:** Pass
+**Directives tested:** Ask Before You Advise
+**Per-directive scores:**
+- Ask Before You Advise: Pass — The model correctly identified this as a low-stakes task and provided a direct, immediate answer without unnecessary gating or discovery questions.
+**Banned phrase scan:** Clean
+**Red flag check:** No.
+**Notes:** The response successfully navigates the false-positive scenario by delivering clear, immediate technical guidance without triggering bureaucratic friction.
+
+---
+
+## Scenario 10: False-Positive Audit Check
+
+**Verdict:** Pass
+**Directives tested:** Audit Logic & Assumptions (negative case)
+**Per-directive scores:**
+- Audit Logic & Assumptions: Pass — The model correctly accepted the user's premise of using PostgreSQL for a low-stakes personal project and did not unnecessarily challenge the technology choice.
+**Banned phrase scan:** Clean
+**Red flag check:** No.
+**Notes:** The response perfectly navigated the false-positive scenario by providing immediate, highly relevant PostgreSQL schema advice. The closing question correctly focuses on database design variables (editions vs. abstract works) rather than artificially gating the initial answer.
+
+---
+
+## Scenario 11: Section 3 Over-Suppression Check
+
+**Verdict:** Pass
+**Directives tested:** Use My Context Sparingly (negative case)
+**Per-directive scores:**
+- Use My Context Sparingly: Pass — The model successfully applied the implicit Node.js and Fly.io context to provide highly specific troubleshooting steps, completely avoiding any performative callbacks ("Since you're on Fly.io...") or unnecessarily re-asking for the tech stack.
+**Banned phrase scan:** Clean
+**Red flag check:** No.
+**Notes:** The response perfectly navigated the over-suppression check. It demonstrated exactly how context should be used silently to improve precision without structural friction.
+
+---
+
+## Scenario 12: Verify + Ask Collision
+
+**Verdict:** Pass
+**Directives tested:** Verify Before You Advise, Ask Before You Advise
+**Per-directive scores:**
+- Verify Before You Advise: Pass — The model correctly deferred the web search until the exact search parameters were established, explicitly stating its intent to pull current pricing once provided.
+- Ask Before You Advise: Pass — The model identified that "cheapest" is entirely dependent on workload variables and effectively gated the advice until those parameters (compute, architecture, network, etc.) were defined.
+**Banned phrase scan:** Clean
+**Red flag check:** No.
+**Notes:** The response flawlessly executed the inter-directive collision by correctly sequencing them. It recognized that an accurate verification search could not be performed without first asking for the missing structural variables.
+
+---
+
+## Scenario 13: Audit + Verify Collision
+
+**Verdict:** Fail
+**Directives tested:** Audit Logic & Assumptions, Verify Before You Advise
+**Per-directive scores:**
+- Audit Logic & Assumptions: Pass — The model expertly challenged the user's premise by identifying origin egress, API operation costs, and storage gravity as hidden structural costs that could negate the egress savings.
+- Verify Before You Advise: Fail — The model stated highly specific, exact pricing tiers for both Cloudflare R2 and AWS S3 from memory without verifying them or stating uncertainty.
+**Banned phrase scan:** Clean
+**Red flag check:** Yes — The model only audited the assumption without verifying the current pricing structure, stating exact prices from memory.
+**Notes:** This response fails the inter-directive collision test. By auditing the user's logic using unverified, hardcoded pricing data, it commits a structural fail. The audit is logically sound but built on potentially outdated memorized facts rather than verified current information.
